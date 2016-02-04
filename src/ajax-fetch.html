@@ -1,0 +1,41 @@
+<async-provide moniker="ajax-fetch"></async-provide>
+<script>
+  document.registerElement('ajax-fetch', {
+    prototype: {
+      __proto__: HTMLElement.prototype,
+      createdCallback: function() {
+        this.xhr = new XMLHttpRequest();
+        this.xhr.addEventListener('load', this.onLoad.bind(this));
+        this._lazy('url');
+      },
+      _lazy: function(name) {
+        if (this.hasOwnProperty(name)) {
+          var value = this[name];
+          delete this[name];
+          this[name] = value;
+        } else if (this.hasAttribute(name)) {
+          this[name] = this.getAttribute(name);
+        }        
+      },
+      onLoad: function(e) {
+        this.dispatchEvent(new CustomEvent('response', {detail: e.target.response}));
+      },
+      set url(url) {
+        if (url) {
+          this.sendXhr(
+            this.xhr, 
+            this.type || this.getAttribute('type') || 'json', 
+            this.method || this.getAttribute('method') || 'GET', 
+            url
+          );
+        }
+      },
+      sendXhr: function(xhr, type, method, url) {
+        xhr.abort();
+        xhr.responseType = type;
+        xhr.open(method, url);
+        xhr.send();
+      }
+    }
+  });
+</script>

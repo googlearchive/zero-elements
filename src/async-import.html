@@ -1,0 +1,101 @@
+<async-provide moniker="ajax-import"></async-provide>
+<script>
+(function() {
+  'use strict';
+  
+  var imported = Object.create(null);;
+  var provided = Object.create(null);
+  
+  var provideUrl = function(url) {
+    provided[url] = true;
+    imports[url] = true;
+    //console.log('provideUrl: ', url, imports[url]);
+  };
+
+  var provideUrls = function() {
+    Array.prototype.forEach.call(arguments, provideUrl);
+  };
+  
+  var importUrl = function(url) {
+    //console.log('importUrl: ', url, imports[url]);
+    if (matched[url]) {
+      return true;
+    } else {
+      imports[url] = true;
+      himport(url);
+    }
+  };
+  
+  var importUrls = function() {
+    Array.prototype.forEach.call(arguments, importUrl);
+  };
+  
+  var matched = function(url) {
+    if (imported[url]) {
+      return true;
+    }
+    for (var n in provided) {
+      if (url.indexOf(n) >= 0) {
+        return true;
+      }
+    }
+  }
+  
+  var himport = function(href, cb) {
+    var link = document.createElement('link');
+    link.rel = 'import';
+    link.href = href;
+    link.onload = cb;
+    // TODO(sjmiles): why doesn't property work? bug?
+    link.async = true;
+    link.setAttribute('async', 'async');
+    // TODO(sjmiles): never seems to be async enough...
+    document.head.appendChild(link);
+  };
+  
+  // TODO(sjmiles): export these somehow
+  //Nano.provide = provideUrls;
+  //Nano.import = importUrls;
+
+  // TODO(sjmiles): precise reasons for delay code lost in the fog of war.
+  // Is the delay to allow scripts to call `Nano.provide` before processing declarative imports (CE polyfill?)
+  // Is the delay so the imports don't defer first paint?
+
+  var docReady = false; //document.readyState === "complete" || document.readyState === "interactive";
+  if (!docReady) {
+    var deferred = [];
+    var deferUrl = function(url) {
+      //console.log('importUrl(deferred): ', url);
+      deferred.push(url);
+    };
+    var _importUrl = importUrl;
+    importUrl = deferUrl;
+    window.addEventListener('load', function() {
+      //console.log('window load');
+      importUrl = _importUrl;
+      deferred.forEach(importUrl);
+    });
+  }
+
+  // register elements last (remember upgrade is sync)
+ 
+  document.registerElement('async-import', {
+    prototype: {
+      __proto__: HTMLElement.prototype,
+      createdCallback: function() {
+        importUrl(this.getAttribute('href'));
+      }
+    }
+  });
+  
+  document.registerElement('async-provide', {
+    prototype: {
+      __proto__: HTMLElement.prototype,
+      createdCallback: function() {
+        provideUrl(this.getAttribute('moniker'));
+      }
+    }
+  });
+  
+})();
+</script>

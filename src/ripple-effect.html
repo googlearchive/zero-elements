@@ -1,0 +1,104 @@
+<async-provide moniker="ripple-effect"></async-provide>
+<dom-module id="ripple-effect">
+  <style>
+     ripple-effect-clip {
+      pointer-events: none;
+      display: inline-block;
+      position: fixed;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    ripple-effect-wave {
+      pointer-events: none;
+      display: inline-block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 1024px;
+      transform: scale(0);
+      opacity: 0.5;
+      transition: transform 250ms ease-in-out, opacity 300ms ease-in-out;
+    }
+  </style>
+  <script>
+    'uses strict;'
+    document.registerElement('ripple-effect', {
+      prototype: {
+        __proto__: HTMLElement.prototype,
+        createdCallback: function() {
+          this.color = '#bbbbbb';
+          this.layer = document.body;
+        },
+        makeClip: function(r) {
+          var clip = document.createElement('ripple-effect-clip');
+          clip.style.top = r.top + 'px';
+          clip.style.width = r.width + 'px';
+          clip.style.height = r.height + 'px';
+          clip.style.left = r.left + 'px';
+          clip.r = r;
+          return clip;
+        },
+        makeWave: function(r, x, y) {
+          var w = document.createElement('ripple-effect-wave')
+          //
+          var mn = Math.min(r.width, r.height);
+          var mx = Math.max(r.width, r.height);
+          var c = mn/2;
+          //
+          var dx = Math.abs(x - r.width/2);
+          var sx = (r.width + dx*2) / mn;
+          var dy = Math.abs(y - r.height/2);
+          var sy = (r.height + dy*2) / mn;
+          w.scale = Math.round(Math.max(sx, sy) + 1.5);
+          //
+          w.style.top = y - c + 'px';
+          w.style.width = mn + 'px';
+          w.style.height = mn + 'px';
+          w.style.left = x - c  + 'px';
+          w.style.opacity = 0.5;
+          //
+          return w;
+        },
+        waveout: function(w) {
+          w.style.transform = 'scale(' + w.scale + ')';
+          w.style.transition = '';
+        },
+        animate: function(wave) {
+          var wo = this.waveout;
+          setTimeout(function() {
+            wo(wave);
+          }, 1);
+        },
+        wave: function(clip, x, y) {
+          return clip.appendChild(this.makeWave(clip.r, x, y));
+        },
+        ripple: function(target, x, y, color, rect) {
+          var clip = this.makeClip(rect || target.getBoundingClientRect());
+          this.layer.appendChild(clip);
+          //
+          // all waves should be created before animating: adding nodes cancels in-flight transitions
+          var wave0 = this.wave(clip, x, y);
+          wave0.style.backgroundColor = color;
+          //
+          // sequence animations
+          this.animate(wave0);
+          //      
+          clip.finish = function() {
+            setTimeout(function() {
+              wave0.style.opacity = 0;
+            }, 1);
+            setTimeout(function() {
+              clip.remove();
+            }, 250);
+          };
+          return clip;
+        },
+        eventRipple: function(e) {
+          return this.ripple(e.currentTarget, e.offsetX, e.offsetY, this.color);
+        }
+      }
+    });
+  </script>
+</dom-module>

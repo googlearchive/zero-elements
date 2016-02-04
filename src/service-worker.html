@@ -1,0 +1,18 @@
+<async-provide moniker="service-worker"></async-provide>
+<script>
+  document.registerElement('service-worker', {
+    prototype: {
+      __proto__: HTMLElement.prototype,
+      createdCallback: function() {
+        this.register(this.getAttribute('href'), this.getAttribute('scope') || '.');
+      },
+      register: function(href, scope) {
+        if (!this.hasAttribute('disabled') && href && ('serviceWorker' in navigator)) {
+          navigator.serviceWorker.register(href, {scope: scope}).then(function(ServiceWorkerRegistration) {
+            this.worker = ServiceWorkerRegistration;
+          }.bind(this));
+        }
+      }
+    }
+  });
+</script>
