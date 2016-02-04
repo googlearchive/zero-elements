@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+
+  <title>flex-layout-demo</title>
+  
+  <link rel="import" href="../flex-layout.html">
+  
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    div {
+      border: 3px solid orange;
+      min-height: 64px;
+      min-width: 32px;
+      background-color: whitesmoke;
+    }
+    div > div {
+      border: 2px solid lightblue;
+      background-color: white;
+    }
+    div > div > div {
+      border: 1px solid magenta;
+    }
+  </style>
+  
+</head>
+<body>
+
+  <h4>Vertical Layout</h4>
+  <div vertical layout>
+    <div></div>
+    <div></div>
+    <div></div>    
+  </div>
+ 
+  <h4>Vertical Layout</h4>
+  <div vertical layout style="height: 200px">
+    <div></div>
+    <div flex>flex</div>
+    <div></div>    
+  </div>
+ 
+  <h4>Vertical Center Layout</h4>
+  <div vertical center layout style="height: 200px">
+    <div></div>    
+  </div>
+ 
+  <h4>Vertical Center Middle Layout</h4>
+  <div vertical center middle layout style="height: 200px">
+    <div></div>    
+  </div>
+  
+  <h4>Horizontal Layout</h4>
+  <div horizontal layout>
+    <div></div>
+    <div></div>
+    <div></div>    
+  </div>
+ 
+  <h4>Horizontal Layout</h4>
+  <div horizontal layout>
+    <div></div>
+    <div flex>flex</div>
+    <div></div>    
+  </div>
+
+  <h4>Horizontal Center Layout</h4>
+  <div horizontal center layout style="height: 200px">
+    <div></div>    
+  </div>
+ 
+  <h4>Horizontal Center Middle Layout</h4>
+  <div horizontal center middle layout style="height: 200px">
+    <div></div>    
+  </div>
+  
+</body>
+</html>

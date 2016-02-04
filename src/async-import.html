@@ -8,7 +8,7 @@
   
   var provideUrl = function(url) {
     provided[url] = true;
-    imports[url] = true;
+    imported[url] = true;
     //console.log('provideUrl: ', url, imports[url]);
   };
 
@@ -18,10 +18,10 @@
   
   var importUrl = function(url) {
     //console.log('importUrl: ', url, imports[url]);
-    if (matched[url]) {
+    if (matched(url)) {
       return true;
     } else {
-      imports[url] = true;
+      imported[url] = true;
       himport(url);
     }
   };

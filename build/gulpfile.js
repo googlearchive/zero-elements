@@ -12,7 +12,8 @@ var modules = [
   'async-import.html',
   'google-analytics.html',
   'service-worker.html',
-  'ripple-effect.html'
+  'ripple-effect.html',
+  'flex-layout.html'
 ];
 
 var tasks = modules.forEach(function(m) {

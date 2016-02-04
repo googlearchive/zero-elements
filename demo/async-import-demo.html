@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+
+  <title>async-import-demo</title>
+  
+  <link rel="import" href="../async-import.html">
+  
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+  </style>
+  
+</head>
+<body>
+
+  <h3>Demo is successful if there is no alert.</h3>
+  <p>.. you can also check console.</p>
+  
+  <!-- providing `test-import.html` ... -->
+  <async-provide moniker="test-import.html"></async-provide>
+  
+  <!-- ... prevents `test-import.html` from importing -->
+  <async-import href="assets/test-import.html"></async-import>
+  
+</body>
+</html>

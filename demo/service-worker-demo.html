@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+
+  <title>service-worker-demo</title>
+  
+  <!-- <link rel="import" href="../service-worker.html"> -->
+  
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+  </style>
+  
+</head>
+<body>
+
+  <!-- href is required, default scope is "." -->
+  <service-worker href="sw.js"></service-worker>
+
+  <!-- optionally specify scope -->
+  <service-worker href="sw.js" scope="/" disabled></service-worker>
+  
+  <!-- can be disabled -->
+  <service-worker href="sw.js" disabled></service-worker>
+
+  <script src="https://gist.github.com/sjmiles/ea65affa88a58b472a15.js"></script>
+  
+</body>
+</html>

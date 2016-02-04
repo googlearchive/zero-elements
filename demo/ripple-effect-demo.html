@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+
+  <title>ripple-effect-demo</title>
+  
+  <link rel="import" href="../ripple-effect.html">
+  
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: whitesmoke;
+    }
+    div {
+      border: 3px solid orange;
+      padding: 8px;
+      height: 128px;
+      width: 128px;
+      background-color: white;
+    }
+  </style>
+  
+</head>
+<body>
+
+  <div id="zone">Click me</div>
+  
+  <script>
+    var ripple = document.createElement('ripple-effect');
+    ripple.color = 'blue';
+    zone.onmousedown = function(e) {
+      ripple.eventRipple(e).finish();
+    }
+  </script>
+</body>
+</html>

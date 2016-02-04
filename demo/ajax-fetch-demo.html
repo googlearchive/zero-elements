@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+
+  <title>ajax-fetch-demo</title>
+  
+  <link rel="import" href="../ajax-fetch.html">
+  
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+  </style>
+  
+</head>
+<body>
+
+  <ajax-fetch id="ajax" url="../README.md" type="text"></ajax-fetch>
+  
+  <h2>README.md:</h2>
+  <pre id="pre"></pre>
+  
+  <script>
+    ajax.addEventListener('response', function(e) {
+      pre.innerHTML = e.detail.replace('assets/', '../assets/');
+    });
+  </script>
+  
+</body>
+</html>
