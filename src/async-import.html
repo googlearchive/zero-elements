@@ -17,12 +17,13 @@
   };
   
   var importUrl = function(url) {
-    //console.log('importUrl: ', url, imports[url]);
-    if (matched(url)) {
-      return true;
-    } else {
-      imported[url] = true;
-      himport(url);
+    if (url) {
+      if (matched(url)) {
+        return true;
+      } else {
+        imported[url] = true;
+        himport(url);
+      }
     }
   };
   
@@ -83,7 +84,10 @@
     prototype: {
       __proto__: HTMLElement.prototype,
       createdCallback: function() {
-        importUrl(this.getAttribute('href'));
+        this.href = this.getAttribute('href');
+      },
+      set href(href) {
+        importUrl(href);
       }
     }
   });

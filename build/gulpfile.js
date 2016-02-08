@@ -9,7 +9,7 @@ var minifyOptions = {
 
 var modules = [
   'ajax-fetch.html',
-  'async-import.html',
+  'dom-module.html',
   'google-analytics.html',
   'service-worker.html',
   'ripple-effect.html',
