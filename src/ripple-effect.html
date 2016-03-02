@@ -7,10 +7,12 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<async-provide moniker="ripple-effect"></async-provide>
 <dom-module id="ripple-effect">
   <style>
-     ripple-effect-clip {
+    ripple-effect: {
+      display: none;
+    }
+    ripple-effect-clip {
       pointer-events: none;
       display: inline-block;
       position: fixed;
@@ -33,6 +35,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </style>
   <script>
     'uses strict;'
+    document.head.appendChild(document.createElement('ripple-effect'));
     document.registerElement('ripple-effect', {
       prototype: {
         __proto__: HTMLElement.prototype,
@@ -93,7 +96,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           //
           // sequence animations
           this.animate(wave0);
-          //      
+          //
           clip.finish = function() {
             setTimeout(function() {
               wave0.style.opacity = 0;
