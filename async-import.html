@@ -7,5 +7,49 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<async-provide moniker="ajax-import"></async-provide>
-<script>!function(){"use strict";var t=Object.create(null),e=Object.create(null),n=function(n){e[n]=!0,t[n]=!0},r=function(e){if(e){if(o(e))return!0;t[e]=!0,i(e)}},o=function(n){if(t[n])return!0;for(var r in e)if(n.indexOf(r)>=0)return!0},i=function(t,e){var n=document.createElement("link");n.rel="import",n.href=t,n.onload=e,n.async=!0,n.setAttribute("async","async"),document.head.appendChild(n)},c=!1;if(!c){var a=[],u=function(t){a.push(t)},f=r;r=u,window.addEventListener("load",function(){r=f,a.forEach(r)})}document.registerElement("async-import",{prototype:{__proto__:HTMLElement.prototype,createdCallback:function(){this.href=this.getAttribute("href")},set href(t){r(t)}}}),document.registerElement("async-provide",{prototype:{__proto__:HTMLElement.prototype,createdCallback:function(){n(this.getAttribute("moniker"))}}})}();</script>
+<script>
+(function() {
+  'use strict';
+
+  var himport = function(href) {
+    var link = document.createElement('link');
+    link.rel = 'import';
+    link.href = href;
+    link.setAttribute('async', 'async');
+    document.body.appendChild(link);
+  };
+
+  // TODO(sjmiles): we want a type of import that doesn't block
+  // first paint, and `async` doesn't seem to do it, so we
+  // have this junk to delay at least one paint -- we should do
+  // away with this element completely at the earliest possible
+  // moment.
+
+  var deferred = [];
+  var _himport = himport;
+  himport = function(url) {
+    deferred.push(url);
+  };
+
+  var _processDeferred = function() {
+    deferred.forEach(himport = _himport);
+  };
+
+  window.requestAnimationFrame(function() {
+    window.setTimeout(function() {
+      deferred.forEach(himport = _himport);
+      deferred = null;
+    }, 0);
+  });
+
+  document.registerElement('async-import', {
+    prototype: {
+      __proto__: HTMLElement.prototype,
+      createdCallback: function() {
+        himport(this.getAttribute('href'));
+      }
+    }
+  });
+
+})();
+</script>
